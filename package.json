@@ -1,0 +1,32 @@
+{
+  "name": "webpacker",
+  "version": "1.0.0",
+  "description": "Webpack configuration",
+  "main": "index.js",
+  "author": "Rifa'i M Hanif",
+  "license": "MIT",
+  "scripts": {
+    "dev": "webpack --progress --color --mode=development",
+    "watch": "webpack --progress --color --mode=development --watch",
+    "prod": "webpack --progress --color"
+  },
+  "dependencies": {
+    "autoprefixer": "^9.2.1",
+    "copy-webpack-plugin": "^4.5.3",
+    "css-loader": "^1.0.0",
+    "cssnano": "^4.1.4",
+    "extract-text-webpack-plugin": "next",
+    "file-loader": "^2.0.0",
+    "imagemin": "^5.0.0",
+    "img-loader": "^3.0.0",
+    "node-sass": "^4.9.4",
+    "postcss-loader": "^3.0.0",
+    "resolve-url-loader": "^3.0.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "ts-loader": "^5.2.2",
+    "typescript": "^3.1.3",
+    "webpack": "^4.21.0",
+    "webpack-cli": "^3.1.2"
+  }
+}
