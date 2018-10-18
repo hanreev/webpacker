@@ -9,6 +9,11 @@
     "sourceType": "module"
   },
   "rules": {
+    "curly": [
+      "error",
+      "multi",
+      "consistent"
+    ],
     "indent": [
       "error",
       2
@@ -17,6 +22,10 @@
       "error",
       "unix"
     ],
+    "no-console": [
+      "error",
+      { "allow": ["log", "error"] }
+    ],
     "quotes": [
       "error",
       "single"
@@ -24,12 +33,6 @@
     "semi": [
       "error",
       "never"
-    ],
-    "curly": [
-      "error",
-      "multi",
-      "consistent"
-    ],
-    "no-console": "off"
+    ]
   }
 }

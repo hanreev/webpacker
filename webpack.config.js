@@ -45,7 +45,7 @@ const resolveUrlLoader = {
   }
 }
 
-function applyPlaceHolder(src, dest) {
+const resolveName = (src, dest) => {
   dest = dest.replace('[name]', path.basename(src))
   dest = dest.replace('[basename]', path.basename(src, path.extname(src)))
   dest = dest.replace('[ext]', path.extname(src).replace(/^\./, ''))
@@ -63,7 +63,7 @@ module.exports = {
       if (srcPath instanceof Array) {
         if (hasPlaceholder)
           srcPath.forEach(src => {
-            entries[applyPlaceHolder(src, destPath)] = src
+            entries[resolveName(src, destPath)] = src
           })
         else
           entries[destPath] = srcPath
@@ -73,7 +73,7 @@ module.exports = {
 
         glob.sync(path.resolve(__dirname, srcPath)).forEach(file => {
           if (hasPlaceholder)
-            entries[applyPlaceHolder(file, destPath)] = file
+            entries[resolveName(file, destPath)] = file
           else
             entries[destPath].push(file)
         })
