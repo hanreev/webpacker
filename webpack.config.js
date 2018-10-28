@@ -1,11 +1,26 @@
-// Configuration
-const configs = require('./webpacker')
+/**
+ * Webpacker for webpack
+ * https://github.com/hanreev/webpacker
+ */
 
+// Configuration
+const defaultConfigs = {
+  outputPath: '',
+  entries: {},
+  splitChunks: {},
+  providers: {},
+  copies: {},
+  watchExclude: []
+}
+const configs = Object.assign({}, defaultConfigs, require('./webpacker'))
+
+// Helper modules
 const fs = require('fs')
 const path = require('path')
 const glob = require('glob')
 
 // Webpack plugins
+const ProvidePlugin = require('webpack/lib/ProvidePlugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
@@ -103,7 +118,10 @@ module.exports = {
           }
         }
       })
-    ]
+    ],
+    splitChunks: {
+      cacheGroups: configs.splitChunks
+    }
   },
   module: {
     rules: [
@@ -171,6 +189,7 @@ module.exports = {
     ]
   },
   plugins: [
+    new ProvidePlugin(configs.providers),
     new CopyWebpackPlugin(
       Object.keys(configs.copies).map(destPath => {
         return {
