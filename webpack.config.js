@@ -130,7 +130,14 @@ module.exports = (env, argv) => {
     },
     target: 'web',
     mode: 'production',
-    stats: 'errors-only',
+    stats: {
+      all: undefined,
+      assets: true,
+      assetsSort: 'name',
+      children: false,
+      entrypoints: false,
+      modules: false,
+    },
     output: {
       path: path.resolve(__dirname, configs.outputPath),
       filename: '[name]'

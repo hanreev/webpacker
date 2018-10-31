@@ -1,3 +1,16 @@
-node_modules
-dist
-*.sublime-*
+# Dependencies
+/node_modules
+
+# Compiled output
+/dist
+
+# IDEs and editors
+/*.sublime-*
+
+# Misc
+npm-debug.log
+yarn-error.log
+
+# System files
+.DS_Store
+Thumbs.db
