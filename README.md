@@ -1,3 +1,8 @@
 # Webpacker
 
-Use webpack in easy way
+Easy way to use [webpack](https://webpack.js.org/)
+
+
+
+## Installation
+

@@ -14,6 +14,8 @@
  * providers       object            webpack.ProviderPlugin options
  * copies          object            List of files or folders to copy. Format: { destination_path: source_path[string|glob] }
  * sourceMap       boolean|'auto'    Override sourcemap generation
+ * hashOutput      string|boolean    Output path for assets-hash json. true to enable with default output path (asset-hash.json)
+ *                                   or false to disable hash output
  * watchExclude    array             List of files, folders and glob to exclude on watch
  */
 
@@ -41,5 +43,6 @@ module.exports = {
     'images': 'example/images',
   },
   sourceMap: 'auto',
-  watchExclude: []
+  hashOutput: true,
+  watchExclude: ['dist']
 }

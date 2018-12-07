@@ -19,7 +19,6 @@ class HashOutputPlugin {
       hashData.fullHash = stats.compilation.fullHash
       hashData.builtAt = (new Date(stats.endTime)).toLocaleString()
       fs.writeFileSync(this.outputPath, JSON.stringify(hashData, null, 2))
-      console.log('\n\nOutput hashes has been writen to:', this.outputPath, '\n')
     })
   }
 }
