@@ -10,7 +10,7 @@
   },
   "main": "./bin/webpacker.js",
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint ."
   },
   "dependencies": {
     "autoprefixer": "^9.2.1",
