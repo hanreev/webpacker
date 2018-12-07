@@ -1,17 +1,9 @@
 {
   "name": "@hanreev/webpacker",
   "version": "1.0.0",
-  "description": "Easy way to use webpack",
   "author": "Rifa'i M Hanif",
+  "description": "Easy way to use webpack",
   "license": "MIT",
-  "repository": "https://github.com/hanreev/webpacker",
-  "bin": {
-    "webpacker": "./bin/webpacker.js"
-  },
-  "main": "./bin/webpacker.js",
-  "scripts": {
-    "lint": "eslint ."
-  },
   "dependencies": {
     "autoprefixer": "^9.2.1",
     "copy-webpack-plugin": "^4.5.3",
@@ -33,5 +25,23 @@
   },
   "devDependencies": {
     "jquery": "^3.3.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hanreev/webpacker.git"
+  },
+  "main": "./bin/webpacker.js",
+  "bin": {
+    "webpacker": "./bin/webpacker.js"
+  },
+  "files": [
+    "bin",
+    "commands",
+    "lib",
+    "plugins",
+    "tsconfig.json"
+  ],
+  "scripts": {
+    "lint": "eslint ."
   }
 }
