@@ -1,0 +1,29 @@
+@import 'variables';
+
+body {
+    font-family: sans-serif;
+    margin: 0;
+}
+
+a {
+    text-decoration: underline;
+
+    &:hover {
+        color: lighten($primary-color, 10);
+    }
+
+    &:visited {
+        color: darken($primary-color, 10);
+    }
+}
+
+.content {
+    .title {
+        font-size: $font-size-base * 1.5;
+        font-weight: bold;
+    }
+
+    p {
+        margin-bottom: .5rem;
+    }
+}

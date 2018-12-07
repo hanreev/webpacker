@@ -6,8 +6,10 @@
 // Configuration
 const defaultConfigs = {
   outputPath: '',
+  publicPath: '',
   entries: {},
   splitChunks: {},
+  runtimeChunk: false,
   providers: {},
   copies: {},
   sourceMap: 'auto',
@@ -25,7 +27,8 @@ const ProvidePlugin = require('webpack/lib/ProvidePlugin')
 const SourceMapDevToolPlugin = require('webpack/lib/SourceMapDevToolPlugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
+const HashOutputPlugin = require('./HashOutputPlugin')
 
 // PostCSS plugins
 const autoprefixer = require('autoprefixer')
@@ -59,15 +62,19 @@ module.exports = (env, argv) => {
       sourceMap,
       ident: 'postcss',
       plugins: [
-        autoprefixer,
-        cssnano({
-          preset: ['default', {
-            discardComments: { removeAll: !development }
-          }]
-        })
+        autoprefixer
       ]
     }
   }
+
+  if (!development)
+    postcssLoader.options.plugins.push(
+      cssnano({
+        preset: ['default', {
+          discardComments: { removeAll: true }
+        }]
+      })
+    )
 
   const resolveUrlLoader = {
     loader: 'resolve-url-loader',
@@ -88,6 +95,7 @@ module.exports = (env, argv) => {
       })
     ),
     new ExtractTextPlugin('[name]'),
+    new HashOutputPlugin(),
   ]
 
   if (sourceMap)
@@ -140,12 +148,13 @@ module.exports = (env, argv) => {
     },
     output: {
       path: path.resolve(__dirname, configs.outputPath),
+      publicPath: configs.publicPath,
       filename: '[name]'
     },
     optimization: {
       minimizer: [
-        new UglifyJsPlugin({
-          uglifyOptions: {
+        new TerserPlugin({
+          terserOptions: {
             output: {
               comments: false
             }
@@ -154,7 +163,8 @@ module.exports = (env, argv) => {
       ],
       splitChunks: {
         cacheGroups: configs.splitChunks
-      }
+      },
+      runtimeChunk: configs.runtimeChunk ? { name: configs.runtimeChunk } : false
     },
     module: {
       rules: [
@@ -184,16 +194,15 @@ module.exports = (env, argv) => {
               options: {
                 name: path => {
                   if (!/node_modules|bower_components/.test(path))
-                    return '/images/[name].[ext]?[hash]'
+                    return 'images/[name].[ext]?[hash]'
 
                   return (
-                    '/images/vendor/' +
+                    'images/vendor/' +
                     path.replace(/\\/g, '/')
                       .replace(/((.*(node_modules|bower_components))|images|image|img|assets|dist)\//g, '') +
                       '?[hash]'
                   )
                 },
-                publicPath: ''
               }
             },
             'img-loader'
@@ -206,16 +215,15 @@ module.exports = (env, argv) => {
             options: {
               name: path => {
                 if (!/node_modules|bower_components/.test(path))
-                  return '/fonts/[name].[ext]?[hash]'
+                  return 'fonts/[name].[ext]?[hash]'
 
                 return (
-                  '/fonts/vendor/' +
+                  'fonts/vendor/' +
                   path.replace(/\\/g, '/')
                     .replace(/((.*(node_modules|bower_components))|fonts|font|assets|dist)\//g, '') +
                     '?[hash]'
                 )
-              },
-              publicPath: ''
+              }
             }
           }
         }
