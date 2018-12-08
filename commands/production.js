@@ -4,7 +4,12 @@ const compiler = require('../lib/compiler')
 const command = ['prod', 'production', '$0']
 const desc = 'Compile assets for production'
 const handler = argv => {
-  const config = buildConfig(require(argv.config), argv)
+  let config
+  try {
+    config = buildConfig(require(argv.config), argv)
+  } catch (err) {
+    throw err
+  }
   config.mode = 'production'
   compiler(config, argv)
 }

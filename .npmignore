@@ -2,5 +2,7 @@
 .eslintignore
 .eslintrc.json
 .sasslintrc
+asset-hash.json
 dist
 example
+tsconfig.json
