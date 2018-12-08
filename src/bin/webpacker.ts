@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import * as path from 'path'
 import * as yargs from 'yargs'
 import { Configuration as WebpackConfig } from 'webpack'
