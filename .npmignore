@@ -5,4 +5,7 @@
 asset-hash.json
 dist
 example
+src
 tsconfig.json
+tslint.json
+webpacker.config.js

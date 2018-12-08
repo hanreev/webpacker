@@ -2,7 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
-    "outDir": "./out-tsc",
+    "outDir": ".",
     "target": "es5",
     "moduleResolution": "node",
     "sourceMap": false,
@@ -23,6 +23,9 @@
       ]
     }
   },
+  "include": [
+    "src/**/*"
+  ],
   "exclude": [
     "node_modules"
   ]

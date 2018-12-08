@@ -6,13 +6,15 @@ module.exports = {
     'css/[basename].css': 'example/sass/[^_.]*.s[ac]ss',
   },
   splitChunks: {
-    jquery: {
-      test: /[\\/]node_modules[\\/]jquery[\\/]/,
-      name: 'js/vendor.js',
-      chunks: 'all',
+    cacheGroups: {
+      jquery: {
+        test: /[\\/]node_modules[\\/]jquery[\\/]/,
+        name: 'js/vendor.js',
+        chunks: 'all',
+      }
     }
   },
-  runtimeChunk: 'js/runtime.js',
+  runtimeChunk: { name: 'js/runtime.js' },
   providers: {
     $: 'jquery',
     jQuery: 'jquery',

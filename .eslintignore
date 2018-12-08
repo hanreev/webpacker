@@ -1,2 +1,6 @@
-dist
 *.html
+bin
+dist
+lib
+plugins
+src
