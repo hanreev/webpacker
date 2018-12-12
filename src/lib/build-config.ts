@@ -15,6 +15,10 @@ import * as ExtractTextPlugin from 'extract-text-webpack-plugin'
 import * as TerserPlugin from 'terser-webpack-plugin'
 import { HashOutputPlugin } from '../plugins/hash-output'
 
+// CKEditor5
+import * as CKEditorWebpackPlugin from '@ckeditor/ckeditor5-dev-webpack-plugin'
+import { styles } from '@ckeditor/ckeditor5-dev-utils'
+
 // PostCSS plugins
 import * as autoprefixer from 'autoprefixer'
 import * as cssnano from 'cssnano'
@@ -109,6 +113,7 @@ export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
       })
     ),
     new ExtractTextPlugin('[name]'),
+    new CKEditorWebpackPlugin({ language: 'en' }),
   ]
 
   if (sourceMap)
@@ -124,7 +129,7 @@ export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
   // Webpack configs
   return {
     entry: () => {
-      const entries =  {}
+      const entries = {}
 
       Object.keys(configs.entries).forEach(destPath => {
         const srcPath = configs.entries[destPath]
@@ -190,7 +195,31 @@ export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
           use: 'ts-loader'
         },
         {
-          test: /\.css$/,
+          test: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+          use: ['raw-loader']
+        },
+        {
+          test: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
+          use: [
+            {
+              loader: 'style-loader',
+              options: {
+                singleton: true
+              }
+            },
+            {
+              loader: 'postcss-loader',
+              options: styles.getPostCssConfig({
+                themeImporter: {
+                  themePath: require.resolve('@ckeditor/ckeditor5-theme-lark')
+                },
+                minify: true
+              })
+            },
+          ]
+        },
+        {
+          test: /^((?!ckeditor5).)*\.css$/,
           use: ExtractTextPlugin.extract({
             fallback: 'style-loader',
             use: [cssLoader, postcssLoader, resolveUrlLoader],
@@ -204,7 +233,7 @@ export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
           })
         },
         {
-          test: /(\.(png|jpe?g|gif)$|^((?!font).)*\.svg$)/,
+          test: /(\.(png|jpe?g|gif)$|^((?!(font|ckeditor5)).)*\.svg$)/,
           use: [
             {
               loader: 'file-loader',
@@ -217,7 +246,7 @@ export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
                     'images/vendor/' +
                     assetPath.replace(/\\/g, '/')
                       .replace(/((.*(node_modules|bower_components))|images|image|img|assets|dist)\//g, '') +
-                      '?[hash]'
+                    '?[hash]'
                   )
                 },
               }
@@ -238,7 +267,7 @@ export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
                   'fonts/vendor/' +
                   assetPath.replace(/\\/g, '/')
                     .replace(/((.*(node_modules|bower_components))|fonts|font|assets|dist)\//g, '') +
-                    '?[hash]'
+                  '?[hash]'
                 )
               }
             }
