@@ -34,6 +34,7 @@ interface WebpackerConfig {
   sourceMap?: boolean | 'auto'
   hashOutput?: boolean | string
   watchExclude?: string[]
+  ckEditor?: { language: string, themePath: string }
 }
 
 // Configuration
@@ -47,7 +48,8 @@ const defaultConfigs: WebpackerConfig = {
   copies: {},
   sourceMap: 'auto',
   hashOutput: true,
-  watchExclude: []
+  watchExclude: [],
+  ckEditor: { language: 'en', themePath: '@ckeditor/ckeditor5-theme-lark' },
 }
 
 const resolveName = (src, dest) => {
@@ -113,7 +115,7 @@ export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
       })
     ),
     new ExtractTextPlugin('[name]'),
-    new CKEditorWebpackPlugin({ language: 'en' }),
+    new CKEditorWebpackPlugin({ language: configs.ckEditor.language }),
   ]
 
   if (sourceMap)
@@ -211,7 +213,7 @@ export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
               loader: 'postcss-loader',
               options: styles.getPostCssConfig({
                 themeImporter: {
-                  themePath: require.resolve('@ckeditor/ckeditor5-theme-lark')
+                  themePath: require.resolve(configs.ckEditor.themePath)
                 },
                 minify: true
               })
@@ -255,7 +257,7 @@ export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
           ]
         },
         {
-          test: /(\.(woff2?|ttf|eot|otf)$|font.*\.svg$)/,
+          test: /(\.(woff2?|ttf|eot|otf)$|^((?!ckeditor5).)*font.*\.svg$)/,
           use: {
             loader: 'file-loader',
             options: {

@@ -25,5 +25,9 @@ module.exports = {
   },
   sourceMap: 'auto',
   hashOutput: true,
-  watchExclude: ['dist']
+  watchExclude: ['dist'],
+  ckEditor: {
+    language: 'en',
+    themePath: '@ckeditor/ckeditor5-theme-lark',
+  }
 }
