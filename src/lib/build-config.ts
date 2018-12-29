@@ -52,7 +52,7 @@ const defaultConfigs: WebpackerConfig = {
   ckEditor: { language: 'en', themePath: '@ckeditor/ckeditor5-theme-lark' },
 }
 
-const resolveName = (src, dest) => {
+const resolveName = (src: string, dest: string) => {
   dest = dest.replace('[name]', path.basename(src))
   dest = dest.replace('[basename]', path.basename(src, path.extname(src)))
   dest = dest.replace('[ext]', path.extname(src).replace(/^\./, ''))
@@ -240,7 +240,7 @@ export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
             {
               loader: 'file-loader',
               options: {
-                name: assetPath => {
+                name: (assetPath: string) => {
                   if (!/node_modules|bower_components/.test(assetPath))
                     return 'images/[name].[ext]?[hash]'
 
@@ -261,7 +261,7 @@ export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
           use: {
             loader: 'file-loader',
             options: {
-              name: assetPath => {
+              name: (assetPath: string) => {
                 if (!/node_modules|bower_components/.test(assetPath))
                   return 'fonts/[name].[ext]?[hash]'
 

@@ -29,13 +29,13 @@ export const webpackerCompiler = (config: webpack.Configuration, argv) => {
   if (argv.color && process.stdout.isTTY)
     (outputOptions as any).colors = require('supports-color').stdout
 
-  const compilerCallback = (err, stats) => {
+  const compilerCallback = (err: Error, stats: webpack.Stats) => {
     if (!argv.watch || err)
       (compiler as any).purgeInputFileSystem()
     if (err) {
       lastHash = null
       console.error(err.stack || err)
-      if (err.details) console.error(err.details)
+      if (err.message) console.error(err.message)
       process.exit(1)
     }
     if (argv.json)
