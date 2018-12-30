@@ -197,11 +197,11 @@ export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
           use: 'ts-loader'
         },
         {
-          test: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+          test: /ckeditor5-[^/\\]+[\/\\]theme[\/\\]icons[\/\\][^/\\]+\.svg$/,
           use: ['raw-loader']
         },
         {
-          test: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
+          test: /ckeditor5-[^/\\]+[\/\\]theme[\/\\][\w-\/\\]+\.css$/,
           use: [
             {
               loader: 'style-loader',
