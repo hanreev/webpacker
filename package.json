@@ -1,6 +1,6 @@
 {
   "name": "@hanreev/webpacker",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "author": "Rifa'i M Hanif",
   "description": "Easy way to use webpack",
   "license": "MIT",
