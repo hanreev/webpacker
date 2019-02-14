@@ -1,12 +1,13 @@
 {
   "name": "@hanreev/webpacker",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "author": "Rifa'i M Hanif",
   "description": "Easy way to use webpack",
   "license": "MIT",
   "dependencies": {
     "@ckeditor/ckeditor5-dev-utils": "^11.0.1",
     "@ckeditor/ckeditor5-dev-webpack-plugin": "^7.0.1",
+    "@ckeditor/ckeditor5-theme-lark": "^12.0.0",
     "autoprefixer": "^9.2.1",
     "copy-webpack-plugin": "^4.5.3",
     "css-loader": "^1.0.0",
@@ -43,7 +44,6 @@
     "@ckeditor/ckeditor5-paragraph": "^10.0.4",
     "@ckeditor/ckeditor5-paste-from-office": "^10.0.0",
     "@ckeditor/ckeditor5-table": "^11.0.1",
-    "@ckeditor/ckeditor5-theme-lark": "^12.0.0",
     "@ckeditor/ckeditor5-upload": "^10.0.4",
     "@types/glob": "^7.1.1",
     "@types/jquery": "^3.3.22",
