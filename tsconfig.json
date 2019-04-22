@@ -1,32 +1,34 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "allowJs": true,
     "baseUrl": "./",
-    "outDir": ".",
-    "target": "es5",
-    "moduleResolution": "node",
-    "sourceMap": false,
     "declaration": false,
-    "resolveJsonModule": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": true,
     "lib": [
       "esnext",
       "dom"
     ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noUnusedLocals": false,
+    "noUnusedParameters": true,
+    "outDir": ".",
     "paths": {
       "*": [
         "node_modules/@types/*",
         "node_modules/*"
       ]
-    }
+    },
+    "resolveJsonModule": true,
+    "sourceMap": false,
+    "target": "es5"
   },
-  "include": [
-    "src/**/*"
-  ],
   "exclude": [
     "node_modules"
+  ],
+  "include": [
+    "src/**/*"
   ]
 }

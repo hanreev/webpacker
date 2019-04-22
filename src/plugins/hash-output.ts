@@ -1,3 +1,8 @@
+/**
+ * Webpacker for webpack
+ * https://github.com/hanreev/webpacker
+ */
+
 import * as fs from 'fs'
 import * as path from 'path'
 import { Compiler } from 'webpack'
@@ -19,7 +24,7 @@ export class HashOutputPlugin {
 
   apply(compiler: Compiler) {
     compiler.hooks.done.tap('HashOutputPlugin', stats => {
-      const outputOptions =  stats.compilation.outputOptions
+      const outputOptions = stats.compilation.outputOptions
       const hashData: HashOutputData = {}
       stats.compilation.chunks.forEach(chunk => {
         const fullPath = path.join(outputOptions.publicPath, chunk.name).replace(/\\/g, '/')

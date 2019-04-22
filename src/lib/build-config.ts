@@ -7,9 +7,11 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import * as glob from 'glob'
+import * as yargs from 'yargs'
 
 // Webpack modules
-import { ProvidePlugin, SourceMapDevToolPlugin, Configuration, Options } from 'webpack'
+import * as webpack from 'webpack'
+import * as WebpackDevServer from 'webpack-dev-server'
 import * as CopyWebpackPlugin from 'copy-webpack-plugin'
 import * as ExtractTextPlugin from 'extract-text-webpack-plugin'
 import * as TerserPlugin from 'terser-webpack-plugin'
@@ -27,13 +29,14 @@ interface WebpackerConfig {
   outputPath?: string
   publicPath?: string
   entries?: { [destPath: string]: string | string[] }
-  splitChunks?: Options.SplitChunksOptions
-  runtimeChunk?: boolean | 'single' | 'multiple' | Options.RuntimeChunkOptions
+  splitChunks?: webpack.Options.SplitChunksOptions
+  runtimeChunk?: boolean | 'single' | 'multiple' | webpack.Options.RuntimeChunkOptions
   providers?: { [key: string]: string }
   copies?: { [destPath: string]: string }
   sourceMap?: boolean | 'auto'
   hashOutput?: boolean | string
   watchExclude?: string[]
+  devServer?: WebpackDevServer.Configuration
   ckEditor?: { language: string, themePath: string }
 }
 
@@ -59,7 +62,7 @@ const resolveName = (src: string, dest: string) => {
   return dest
 }
 
-export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
+export const buildConfig = (configs: WebpackerConfig, argv: yargs.Arguments<WebpackerArgv>): webpack.Configuration => {
   configs = Object.assign({}, defaultConfigs, configs)
 
   const development = argv.mode === 'development'
@@ -105,7 +108,7 @@ export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
 
   // Plugins
   const plugins = [
-    new ProvidePlugin(configs.providers),
+    new webpack.ProvidePlugin(configs.providers),
     new CopyWebpackPlugin(
       Object.keys(configs.copies).map(destPath => {
         return {
@@ -119,7 +122,7 @@ export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
   ]
 
   if (sourceMap)
-    plugins.push(new SourceMapDevToolPlugin())
+    plugins.push(new webpack.SourceMapDevToolPlugin())
 
   if (configs.hashOutput) {
     let hashOutputPath = null
@@ -136,7 +139,7 @@ export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
       Object.keys(configs.entries).forEach(destPath => {
         const srcPath = configs.entries[destPath]
         const hasPlaceholder = /\[(name|basename|ext)\]/.test(destPath)
-        if (srcPath instanceof Array)
+        if (Array.isArray(srcPath))
           if (hasPlaceholder)
             srcPath.forEach(src => {
               entries[resolveName(src, destPath)] = src
@@ -163,7 +166,7 @@ export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
       extensions: ['.js', '.ts']
     },
     target: 'web',
-    mode: 'production',
+    mode: development ? 'development' : 'production',
     stats: {
       all: undefined,
       assets: true,
@@ -280,7 +283,8 @@ export const buildConfig = (configs: WebpackerConfig, argv): Configuration => {
     plugins,
     watchOptions: {
       ignored: ['node_modules'].concat(configs.watchExclude)
-    }
+    },
+    devServer: configs.devServer
   }
 }
 

@@ -1,4 +1,8 @@
 "use strict";
+/**
+ * Webpacker for webpack
+ * https://github.com/hanreev/webpacker
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 var fs = require("fs");
 var path = require("path");
