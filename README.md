@@ -22,7 +22,18 @@ Easy way to use [webpack](https://webpack.js.org/)
 
 ### Configuration
 
-- Create `webpacker.config.js` in root directory of your project. See [example](https://github.com/hanreev/webpacker/blob/master/webpacker.config.js).
+- Run `webpacker init` command to generate empty configuration
+  ```bash
+  # NPX
+  npx webpacker init
+
+  # yarn
+  yarn webpacker init
+  ```
+
+  > Add `--out` options to generate `webpacker.config.js` into different path
+  >
+  > See [configuration example](https://github.com/hanreev/webpacker/blob/master/webpacker.config.js) 
 
 - Available options:
 

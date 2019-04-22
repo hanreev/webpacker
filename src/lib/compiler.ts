@@ -6,7 +6,7 @@
 import * as webpack from 'webpack'
 import * as yargs from 'yargs'
 
-export const webpackerCompiler = (config: webpack.Configuration, argv: yargs.Arguments<WebpackerArgv>, runCompiler = true) => {
+export const webpackerCompiler = (config: webpack.Configuration, argv: yargs.Arguments<WebpackerArgs>, runCompiler = true) => {
   let compiler: webpack.Compiler
   let lastHash: string = null
   let outputOptions = config.stats

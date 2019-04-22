@@ -62,7 +62,7 @@ const resolveName = (src: string, dest: string) => {
   return dest
 }
 
-export const buildConfig = (configs: WebpackerConfig, argv: yargs.Arguments<WebpackerArgv>): webpack.Configuration => {
+export const buildConfig = (configs: WebpackerConfig, argv: yargs.Arguments<WebpackerArgs>): webpack.Configuration => {
   configs = Object.assign({}, defaultConfigs, configs)
 
   const development = argv.mode === 'development'

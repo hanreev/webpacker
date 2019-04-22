@@ -28,12 +28,7 @@ let server: WebpackDevServer
 
 const signals: NodeJS.Signals[] = ['SIGILL', 'SIGTERM']
 
-const defaultArgv = {
-  clientLogLevel: 'info',
-  info: true
-}
-
-export function webpackerDevServer(config: webpack.Configuration, argv: yargs.Arguments<WebpackerArgv>) {
+export function webpackerDevServer(config: webpack.Configuration, argv: yargs.Arguments<WebpackerArgs>) {
   signals.forEach(signal => {
     process.on(signal, () => {
       if (server)
@@ -43,7 +38,6 @@ export function webpackerDevServer(config: webpack.Configuration, argv: yargs.Ar
     })
   })
 
-  argv = Object.assign({}, defaultArgv, argv)
   const options: WebpackDevServer.Configuration = createConfig(config, argv, { port: DEFAULT_PORT })
   const compiler = webpackerCompiler(config, argv, false)
   const suffix =
