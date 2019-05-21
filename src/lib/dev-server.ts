@@ -56,7 +56,7 @@ export function webpackerDevServer(config: webpack.Configuration, argv: yargs.Ar
         clientSocket.on('error', (err: any) => {
           if (err.code === 'ECONNREFUSED') {
             // No other server listening on this socket so it can be safely removed
-            fs.unlinkSync(options.socket);
+            fs.unlinkSync(options.socket)
 
             server.listen(options.socket as any, options.host, (error: any) => {
               if (error)
@@ -78,9 +78,9 @@ export function webpackerDevServer(config: webpack.Configuration, argv: yargs.Ar
       // chmod 666 (rw rw rw)
       const READ_WRITE = 438
 
-      fs.chmod(options.socket, READ_WRITE, (err) => {
-        if (err)
-          throw err
+      fs.chmod(options.socket, READ_WRITE, e => {
+        if (e)
+          throw e
 
         const uri = createDomain(options, (server as any).listeningApp) + suffix
 

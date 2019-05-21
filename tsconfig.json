@@ -1,11 +1,8 @@
 {
-  "compileOnSave": false,
   "compilerOptions": {
     "allowJs": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
-    "declaration": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "lib": [
       "esnext",
       "dom"

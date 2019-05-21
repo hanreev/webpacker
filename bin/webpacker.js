@@ -11,6 +11,7 @@ var yargs = require("yargs");
 var build_config_1 = require("../lib/build-config");
 var compiler_1 = require("../lib/compiler");
 var dev_server_1 = require("../lib/dev-server");
+var merge = require("lodash.merge");
 function handler(mode, watch, withServer) {
     if (mode === void 0) { mode = 'production'; }
     if (watch === void 0) { watch = false; }
@@ -25,10 +26,30 @@ function handler(mode, watch, withServer) {
         catch (err) {
             throw err;
         }
-        if (withServer)
-            dev_server_1.webpackerDevServer(config, args);
+        var compile = function (conf) {
+            if (conf === void 0) { conf = {}; }
+            conf = merge(config, conf);
+            if (withServer)
+                dev_server_1.webpackerDevServer(conf, args);
+            else
+                compiler_1.webpackerCompiler(conf, args);
+        };
+        var webpackConfig;
+        if (args.merge && fs.existsSync(args.merge))
+            try {
+                webpackConfig = require(args.merge);
+                if (webpackConfig instanceof Promise)
+                    webpackConfig.then(function (c) { return compile(c); });
+                else if (typeof webpackConfig === 'function')
+                    compile(webpackConfig.apply(null, [process.env, process.argv]));
+                else
+                    compile(webpackConfig);
+            }
+            catch (error) {
+                console.log('Unable to merge with provided webpack config');
+            }
         else
-            compiler_1.webpackerCompiler(config, args);
+            compile();
     };
 }
 var serverBuilder = function (_yargs) {
@@ -48,9 +69,8 @@ var initBuilder = function (_yargs) {
 };
 var initConfig = function (args) {
     var configTemplatePath = path.resolve(__dirname, '../lib/webpacker.config.template');
-    console.log(configTemplatePath);
     var outputPath = path.resolve(args.out);
-    if (fs.statSync(outputPath).isDirectory())
+    if (fs.existsSync(outputPath) && fs.statSync(outputPath).isDirectory())
         outputPath = path.join(outputPath, 'webpacker.config.js');
     if (fs.existsSync(outputPath))
         return console.error(outputPath + " already exists");
@@ -72,6 +92,12 @@ yargs.options({
         alias: 'c',
         describe: 'Webpacker config path',
         default: path.resolve(process.cwd(), 'webpacker.config.js'),
+    },
+    merge: {
+        type: 'string',
+        alias: 'm',
+        describe: 'Merge with provided webpack config',
+        default: path.resolve(process.cwd(), 'webpack.config.js'),
     },
     progress: {
         type: 'boolean',

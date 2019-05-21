@@ -183,6 +183,8 @@ export const buildConfig = (configs: WebpackerConfig, argv: yargs.Arguments<Webp
     optimization: {
       minimizer: [
         new TerserPlugin({
+          parallel: true,
+          sourceMap,
           terserOptions: {
             output: {
               comments: false
