@@ -4,42 +4,45 @@
  * Webpacker for webpack
  * https://github.com/hanreev/webpacker
  */
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var fs = require("fs");
-var path = require("path");
-var yargs = require("yargs");
-var build_config_1 = require("../lib/build-config");
-var compiler_1 = require("../lib/compiler");
-var dev_server_1 = require("../lib/dev-server");
-var merge = require("lodash.merge");
-function handler(mode, watch, withServer) {
-    if (mode === void 0) { mode = 'production'; }
-    if (watch === void 0) { watch = false; }
-    if (withServer === void 0) { withServer = false; }
-    return function (args) {
+const fs_1 = __importDefault(require("fs"));
+const lodash_merge_1 = __importDefault(require("lodash.merge"));
+const path_1 = __importDefault(require("path"));
+const yargs_1 = __importDefault(require("yargs"));
+const build_config_1 = require("../lib/build-config");
+const compiler_1 = require("../lib/compiler");
+const dev_server_1 = require("../lib/dev-server");
+function handler(mode = 'production', watch = false, withServer = false) {
+    return (args) => {
         args.mode = mode;
         args.watch = watch;
-        var config;
+        let config;
         try {
             config = build_config_1.buildConfig(require(args.config), args);
         }
         catch (err) {
             throw err;
         }
-        var compile = function (conf) {
-            if (conf === void 0) { conf = {}; }
-            conf = merge(config, conf);
+        const compile = (conf = {}) => {
+            if (!Array.isArray(conf))
+                conf = [conf];
             if (withServer)
-                dev_server_1.webpackerDevServer(conf, args);
+                dev_server_1.webpackerDevServer(lodash_merge_1.default(config, conf[0]), args);
             else
-                compiler_1.webpackerCompiler(conf, args);
+                conf.forEach(c => {
+                    c = lodash_merge_1.default(config, c);
+                    compiler_1.webpackerCompiler(c, args);
+                });
         };
-        var webpackConfig;
-        if (args.merge && fs.existsSync(args.merge))
+        let webpackConfig;
+        if (args.merge && fs_1.default.existsSync(args.merge))
             try {
                 webpackConfig = require(args.merge);
                 if (webpackConfig instanceof Promise)
-                    webpackConfig.then(function (c) { return compile(c); });
+                    webpackConfig.then(c => compile(c));
                 else if (typeof webpackConfig === 'function')
                     compile(webpackConfig.apply(null, [process.env, process.argv]));
                 else
@@ -52,52 +55,53 @@ function handler(mode, watch, withServer) {
             compile();
     };
 }
-var serverBuilder = function (_yargs) {
+const serverBuilder = (_yargs) => {
     _yargs.options(require('webpack-dev-server/bin/options'));
     return _yargs;
 };
-var initBuilder = function (_yargs) {
+const initBuilder = (_yargs) => {
     _yargs.options({
         out: {
             type: 'string',
             alias: 'o',
             describe: 'Webpacker config output path',
-            default: path.resolve(process.cwd(), 'webpacker.config.js')
-        }
+            default: path_1.default.resolve(process.cwd(), 'webpacker.config.js'),
+        },
     });
     return _yargs;
 };
-var initConfig = function (args) {
-    var configTemplatePath = path.resolve(__dirname, '../lib/webpacker.config.template');
-    var outputPath = path.resolve(args.out);
-    if (fs.existsSync(outputPath) && fs.statSync(outputPath).isDirectory())
-        outputPath = path.join(outputPath, 'webpacker.config.js');
-    if (fs.existsSync(outputPath))
-        return console.error(outputPath + " already exists");
-    fs.copyFileSync(configTemplatePath, outputPath);
-    console.log(outputPath + " created successfully");
+const initConfig = (args) => {
+    const configTemplatePath = path_1.default.resolve(__dirname, '../lib/webpacker.config.template');
+    let outputPath = path_1.default.resolve(args.out);
+    if (fs_1.default.existsSync(outputPath) && fs_1.default.statSync(outputPath).isDirectory())
+        outputPath = path_1.default.join(outputPath, 'webpacker.config.js');
+    if (fs_1.default.existsSync(outputPath))
+        return console.error(`${outputPath} already exists`);
+    fs_1.default.copyFileSync(configTemplatePath, outputPath);
+    console.log(`${outputPath} created successfully`);
 };
-yargs.usage('Usage: $0 <command> [options]')
+yargs_1.default
+    .usage('Usage: $0 <command> [options]')
     .demandCommand()
     .alias('help', 'h')
     .alias('version', 'v');
-yargs.command(['production', 'prod', '$0'], 'Compile assets for production', {}, handler());
-yargs.command(['development', 'dev'], 'Compile assets for development', {}, handler('development'));
-yargs.command('watch', 'Compile assets for production', {}, handler('development', true));
-yargs.command('server', 'Compile assets and start dev server', serverBuilder, handler('development', false, true));
-yargs.command('init', 'Generate webpacker configuration', initBuilder, initConfig);
-yargs.options({
+yargs_1.default.command(['production', 'prod', '$0'], 'Compile assets for production', {}, handler());
+yargs_1.default.command(['development', 'dev'], 'Compile assets for development', {}, handler('development'));
+yargs_1.default.command('watch', 'Compile assets for production', {}, handler('development', true));
+yargs_1.default.command('server', 'Compile assets and start dev server', serverBuilder, handler('development', false, true));
+yargs_1.default.command('init', 'Generate webpacker configuration', initBuilder, initConfig);
+yargs_1.default.options({
     config: {
         type: 'string',
         alias: 'c',
         describe: 'Webpacker config path',
-        default: path.resolve(process.cwd(), 'webpacker.config.js'),
+        default: path_1.default.resolve(process.cwd(), 'webpacker.config.js'),
     },
     merge: {
         type: 'string',
         alias: 'm',
         describe: 'Merge with provided webpack config',
-        default: path.resolve(process.cwd(), 'webpack.config.js'),
+        default: path_1.default.resolve(process.cwd(), 'webpack.config.js'),
     },
     progress: {
         type: 'boolean',
@@ -115,7 +119,7 @@ yargs.options({
     json: {
         type: 'boolean',
         alias: 'j',
-        describe: 'Prints the result as JSON.'
-    }
+        describe: 'Prints the result as JSON.',
+    },
 });
-yargs.parse();
+yargs_1.default.parse();

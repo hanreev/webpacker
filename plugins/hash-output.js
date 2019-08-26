@@ -3,30 +3,31 @@
  * Webpacker for webpack
  * https://github.com/hanreev/webpacker
  */
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var fs = require("fs");
-var path = require("path");
-var HashOutputPlugin = /** @class */ (function () {
-    function HashOutputPlugin(outputPath) {
-        var defaultOutputPath = path.resolve(process.cwd(), 'asset-hash.json');
+const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
+class HashOutputPlugin {
+    constructor(outputPath) {
+        const defaultOutputPath = path_1.default.resolve(process.cwd(), 'asset-hash.json');
         this.outputPath = outputPath || defaultOutputPath;
     }
-    HashOutputPlugin.prototype.apply = function (compiler) {
-        var _this = this;
-        compiler.hooks.done.tap('HashOutputPlugin', function (stats) {
-            var outputOptions = stats.compilation.outputOptions;
-            var hashData = {};
-            stats.compilation.chunks.forEach(function (chunk) {
-                var fullPath = path.join(outputOptions.publicPath, chunk.name).replace(/\\/g, '/');
+    apply(compiler) {
+        compiler.hooks.done.tap('HashOutputPlugin', stats => {
+            const outputOptions = stats.compilation.outputOptions;
+            const hashData = {};
+            stats.compilation.chunks.forEach(chunk => {
+                const fullPath = path_1.default.join(outputOptions.publicPath, chunk.name).replace(/\\/g, '/');
                 hashData[fullPath] = chunk.hash;
             });
             hashData.hash = stats.hash;
-            hashData.fullHash = stats.compilation['fullHash'];
-            hashData.builtAt = (new Date(stats.endTime)).toLocaleString();
-            fs.writeFileSync(_this.outputPath, JSON.stringify(hashData, null, 2));
+            hashData.fullHash = stats.compilation.fullHash;
+            hashData.builtAt = new Date(stats.endTime).toLocaleString();
+            fs_1.default.writeFileSync(this.outputPath, JSON.stringify(hashData, null, 2));
         });
-    };
-    return HashOutputPlugin;
-}());
+    }
+}
 exports.HashOutputPlugin = HashOutputPlugin;
 exports.default = HashOutputPlugin;

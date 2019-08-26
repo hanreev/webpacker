@@ -3,29 +3,16 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",
     "noUnusedLocals": false,
     "noUnusedParameters": true,
     "outDir": ".",
-    "paths": {
-      "*": [
-        "node_modules/@types/*",
-        "node_modules/*"
-      ]
-    },
-    "resolveJsonModule": true,
     "sourceMap": false,
-    "target": "es5"
+    "target": "es2015"
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "src/**/*"
-  ]
+  "exclude": [],
+  "include": ["src/**/*"]
 }
