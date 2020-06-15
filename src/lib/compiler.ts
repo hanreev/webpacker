@@ -9,7 +9,7 @@ import yargs from 'yargs';
 export const webpackerCompiler = (
   config: webpack.Configuration,
   argv: yargs.Arguments<WebpackerArgs>,
-  runCompiler = true,
+  runCompiler = true
 ) => {
   let compiler: webpack.Compiler;
   let lastHash: string = null;

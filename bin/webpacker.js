@@ -80,11 +80,7 @@ const initConfig = (args) => {
     fs_1.default.copyFileSync(configTemplatePath, outputPath);
     console.log(`${outputPath} created successfully`);
 };
-yargs_1.default
-    .usage('Usage: $0 <command> [options]')
-    .demandCommand()
-    .alias('help', 'h')
-    .alias('version', 'v');
+yargs_1.default.usage('Usage: $0 <command> [options]').demandCommand().alias('help', 'h').alias('version', 'v');
 yargs_1.default.command(['production', 'prod', '$0'], 'Compile assets for production', {}, handler());
 yargs_1.default.command(['development', 'dev'], 'Compile assets for development', {}, handler('development'));
 yargs_1.default.command('watch', 'Compile assets for production', {}, handler('development', true));

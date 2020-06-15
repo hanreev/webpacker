@@ -21,7 +21,7 @@ type ConfigurationType =
   | Promise<webpack.Configuration | webpack.Configuration[]>
   | ((
       env: { [key: string]: any } | undefined,
-      argv: { [key: string]: any },
+      argv: { [key: string]: any }
     ) => webpack.Configuration | webpack.Configuration[]);
 
 function handler(mode: 'development' | 'production' = 'production', watch = false, withServer = false) {
@@ -90,11 +90,7 @@ const initConfig = (args: yargs.Arguments) => {
   console.log(`${outputPath} created successfully`);
 };
 
-yargs
-  .usage('Usage: $0 <command> [options]')
-  .demandCommand()
-  .alias('help', 'h')
-  .alias('version', 'v');
+yargs.usage('Usage: $0 <command> [options]').demandCommand().alias('help', 'h').alias('version', 'v');
 
 yargs.command(['production', 'prod', '$0'], 'Compile assets for production', {}, handler());
 yargs.command(['development', 'dev'], 'Compile assets for development', {}, handler('development'));

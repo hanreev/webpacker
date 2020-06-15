@@ -11,17 +11,13 @@ import glob from 'glob';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import NoEmitPlugin from 'no-emit-webpack-plugin';
 import path from 'path';
+import * as postcss from 'postcss';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 import yargs from 'yargs';
 
-import { styles } from '@ckeditor/ckeditor5-dev-utils';
-import CKEditorWebpackPlugin from '@ckeditor/ckeditor5-dev-webpack-plugin';
-
 import { HashOutputPlugin } from '../plugins/hash-output';
-
-import postcss = require('postcss');
 
 interface WebpackerConfig {
   outputPath?: string;
@@ -35,7 +31,6 @@ interface WebpackerConfig {
   hashOutput?: boolean | string;
   watchExclude?: string[];
   devServer?: WebpackDevServer.Configuration;
-  ckEditor?: { language: string; themePath: string };
 }
 
 // Configuration
@@ -50,7 +45,6 @@ const defaultConfigs: WebpackerConfig = {
   sourceMap: 'auto',
   hashOutput: true,
   watchExclude: [],
-  ckEditor: { language: 'en', themePath: '@ckeditor/ckeditor5-theme-lark' },
 };
 
 const resolveName = (src: string, dest: string) => {
@@ -66,17 +60,6 @@ export const buildConfig = (configs: WebpackerConfig, argv: yargs.Arguments<Webp
   const development = argv.mode === 'development';
   const sourceMap = configs.sourceMap === 'auto' ? development : configs.sourceMap;
 
-  // Loaders
-  const sassLoader: webpack.Loader = {
-    loader: 'sass-loader',
-    options: { sourceMap },
-  };
-
-  const cssLoader: webpack.Loader = {
-    loader: 'css-loader',
-    options: { sourceMap },
-  };
-
   const postcssLoader: webpack.Loader = {
     loader: 'postcss-loader',
     options: {
@@ -87,22 +70,11 @@ export const buildConfig = (configs: WebpackerConfig, argv: yargs.Arguments<Webp
   };
 
   if (!development)
-    postcssLoader.options.plugins.push(
-      cssnano({
-        preset: [
-          'default',
-          {
-            discardComments: { removeAll: true },
-          },
-        ],
-      }),
-    );
+    postcssLoader.options.plugins.push(cssnano({ preset: ['default', { discardComments: { removeAll: true } }] }));
 
   const resolveUrlLoader: webpack.Loader = {
     loader: 'resolve-url-loader',
-    options: {
-      root: path.resolve(process.cwd(), 'node_modules'),
-    },
+    options: { root: path.resolve(process.cwd(), 'node_modules') },
   };
 
   const noEmitPaths: string[] = [];
@@ -141,17 +113,16 @@ export const buildConfig = (configs: WebpackerConfig, argv: yargs.Arguments<Webp
   // Plugins
   const plugins: webpack.Plugin[] = [
     new webpack.ProvidePlugin(configs.providers),
-    new CopyWebpackPlugin(
-      Object.keys(configs.copies).map(destPath => {
+    new CopyWebpackPlugin({
+      patterns: Object.keys(configs.copies).map(destPath => {
         return {
           from: path.resolve(process.cwd(), configs.copies[destPath]),
           to: path.resolve(process.cwd(), configs.outputPath, destPath),
         };
       }),
-    ),
+    }),
     new MiniCssExtractPlugin({ filename: '[name].css' }),
     new NoEmitPlugin(noEmitPaths),
-    new CKEditorWebpackPlugin({ language: configs.ckEditor.language }),
   ];
 
   if (sourceMap) plugins.push(new webpack.SourceMapDevToolPlugin());
@@ -205,39 +176,15 @@ export const buildConfig = (configs: WebpackerConfig, argv: yargs.Arguments<Webp
           use: 'ts-loader',
         },
         {
-          test: /ckeditor5-[^/\\]+[\/\\]theme[\/\\]icons[\/\\][^/\\]+\.svg$/,
-          use: ['raw-loader'],
-        },
-        {
-          test: /ckeditor5-[^/\\]+[\/\\]theme[\/\\][\w-\/\\]+\.css$/,
-          use: [
-            {
-              loader: 'style-loader',
-              options: {
-                injectType: 'singletonStyleTag',
-              },
-            },
-            {
-              loader: 'postcss-loader',
-              options: styles.getPostCssConfig({
-                themeImporter: {
-                  themePath: require.resolve(configs.ckEditor.themePath),
-                },
-                minify: true,
-              }),
-            },
-          ],
-        },
-        {
-          test: /^((?!ckeditor5).)*\.css$/,
-          use: [MiniCssExtractPlugin.loader, cssLoader, postcssLoader, resolveUrlLoader],
+          test: /\.css$/,
+          use: [MiniCssExtractPlugin.loader, 'css-loader', postcssLoader, resolveUrlLoader],
         },
         {
           test: /\.s[ac]ss$/,
-          use: [MiniCssExtractPlugin.loader, cssLoader, postcssLoader, resolveUrlLoader, sassLoader],
+          use: [MiniCssExtractPlugin.loader, 'css-loader', postcssLoader, resolveUrlLoader, 'sass-loader'],
         },
         {
-          test: /(\.(png|jpe?g|gif)$|^((?!(font|ckeditor5)).)*\.svg$)/,
+          test: /(\.(png|jpe?g|gif)$|^((?!(font)).)*\.svg$)/,
           use: [
             {
               loader: 'file-loader',
@@ -259,7 +206,7 @@ export const buildConfig = (configs: WebpackerConfig, argv: yargs.Arguments<Webp
           ],
         },
         {
-          test: /(\.(woff2?|ttf|eot|otf)$|^((?!ckeditor5).)*font.*\.svg$)/,
+          test: /(\.(woff2?|ttf|eot|otf)$|font.*\.svg$)/,
           use: {
             loader: 'file-loader',
             options: {

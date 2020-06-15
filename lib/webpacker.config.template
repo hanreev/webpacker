@@ -10,8 +10,4 @@ module.exports = {
   hashOutput: true,
   watchExclude: [],
   devServer: undefined,
-  ckEditor: {
-    language: 'en',
-    themePath: '@ckeditor/ckeditor5-theme-lark',
-  }
 }

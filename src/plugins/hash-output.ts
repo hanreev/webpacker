@@ -7,8 +7,6 @@ import fs from 'fs';
 import path from 'path';
 import { Compiler } from 'webpack';
 
-import webpack = require('webpack');
-
 export interface HashOutputData {
   [name: string]: string;
   hash?: string;

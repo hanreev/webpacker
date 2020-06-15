@@ -11,8 +11,8 @@ module.exports = {
         test: /[\\/]node_modules[\\/]jquery[\\/]/,
         name: 'js/vendor.js',
         chunks: 'all',
-      }
-    }
+      },
+    },
   },
   runtimeChunk: { name: 'js/runtime.js' },
   providers: {
@@ -21,13 +21,9 @@ module.exports = {
   },
   copies: {
     'index.html': 'example/index.html',
-    'images': 'example/images',
+    images: 'example/images',
   },
   sourceMap: 'auto',
   hashOutput: true,
   watchExclude: ['dist'],
-  ckEditor: {
-    language: 'en',
-    themePath: '@ckeditor/ckeditor5-theme-lark',
-  }
-}
+};
