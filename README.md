@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/%40hanreev%2Fwebpacker.svg)](https://badge.fury.io/js/%40hanreev%2Fwebpacker)
+
 # Webpacker
 
 Easy way to use [webpack](https://webpack.js.org/)

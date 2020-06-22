@@ -19,8 +19,10 @@ class HashOutputPlugin {
         compiler.hooks.done.tap('HashOutputPlugin', stats => {
             const outputOptions = stats.compilation.outputOptions;
             const hashData = {};
+            const assets = Object.keys(stats.compilation.assets);
             stats.compilation.chunks.forEach(chunk => {
-                const fullPath = path_1.default.join(outputOptions.publicPath, chunk.name).replace(/\\/g, '/');
+                const name = chunk.files.find((file) => assets.includes(file)) || chunk.name;
+                const fullPath = path_1.default.join(outputOptions.publicPath, name).replace(/\\/g, '/');
                 hashData[fullPath] = chunk.hash;
             });
             hashData.hash = stats.hash;

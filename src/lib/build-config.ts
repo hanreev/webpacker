@@ -38,10 +38,7 @@ const defaultConfigs: WebpackerConfig = {
   outputPath: '',
   publicPath: '',
   entries: {},
-  splitChunks: {},
   runtimeChunk: false,
-  providers: {},
-  copies: {},
   sourceMap: 'auto',
   hashOutput: true,
   watchExclude: [],
@@ -112,18 +109,22 @@ export const buildConfig = (configs: WebpackerConfig, argv: yargs.Arguments<Webp
 
   // Plugins
   const plugins: webpack.Plugin[] = [
-    new webpack.ProvidePlugin(configs.providers),
-    new CopyWebpackPlugin({
-      patterns: Object.keys(configs.copies).map(destPath => {
-        return {
-          from: path.resolve(process.cwd(), configs.copies[destPath]),
-          to: path.resolve(process.cwd(), configs.outputPath, destPath),
-        };
-      }),
-    }),
     new MiniCssExtractPlugin({ filename: '[name].css' }),
     new NoEmitPlugin(noEmitPaths),
   ];
+
+  if (configs.providers) plugins.push(new webpack.ProvidePlugin(configs.providers));
+  if (configs.copies)
+    plugins.push(
+      new CopyWebpackPlugin({
+        patterns: Object.keys(configs.copies).map(destPath => {
+          return {
+            from: path.resolve(process.cwd(), configs.copies[destPath]),
+            to: path.resolve(process.cwd(), configs.outputPath, destPath),
+          };
+        }),
+      })
+    );
 
   if (sourceMap) plugins.push(new webpack.SourceMapDevToolPlugin());
 
