@@ -1,3 +1,4 @@
+/** @type {import('.').WebpackerConfig} */
 module.exports = {
   outputPath: 'dist',
   publicPath: '',

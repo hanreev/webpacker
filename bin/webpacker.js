@@ -30,12 +30,9 @@ function handler(mode = 'production', watch = false, withServer = false) {
             if (!Array.isArray(conf))
                 conf = [conf];
             if (withServer)
-                dev_server_1.webpackerDevServer(lodash_merge_1.default(config, conf[0]), args);
+                dev_server_1.webpackerDevServer(lodash_merge_1.default(config, ...conf), args);
             else
-                conf.forEach(c => {
-                    c = lodash_merge_1.default(config, c);
-                    compiler_1.webpackerCompiler(c, args);
-                });
+                compiler_1.webpackerCompiler(lodash_merge_1.default(config, ...conf), args);
         };
         let webpackConfig;
         if (args.merge && fs_1.default.existsSync(args.merge))
@@ -55,12 +52,12 @@ function handler(mode = 'production', watch = false, withServer = false) {
             compile();
     };
 }
-const serverBuilder = (_yargs) => {
-    _yargs.options(require('webpack-dev-server/bin/options'));
-    return _yargs;
+const serverBuilder = (argv) => {
+    argv.options(require('webpack-dev-server/bin/options'));
+    return argv;
 };
-const initBuilder = (_yargs) => {
-    _yargs.options({
+const initBuilder = (argv) => {
+    argv.options({
         out: {
             type: 'string',
             alias: 'o',
@@ -68,7 +65,7 @@ const initBuilder = (_yargs) => {
             default: path_1.default.resolve(process.cwd(), 'webpacker.config.js'),
         },
     });
-    return _yargs;
+    return argv;
 };
 const initConfig = (args) => {
     const configTemplatePath = path_1.default.resolve(__dirname, '../lib/webpacker.config.template');
@@ -97,7 +94,6 @@ yargs_1.default.options({
         type: 'string',
         alias: 'm',
         describe: 'Merge with provided webpack config',
-        default: path_1.default.resolve(process.cwd(), 'webpack.config.js'),
     },
     progress: {
         type: 'boolean',

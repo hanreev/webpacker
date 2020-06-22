@@ -8,6 +8,7 @@ import CopyWebpackPlugin from 'copy-webpack-plugin';
 import cssnano from 'cssnano';
 import fs from 'fs';
 import glob from 'glob';
+import merge from 'lodash.merge';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import NoEmitPlugin from 'no-emit-webpack-plugin';
 import path from 'path';
@@ -19,7 +20,7 @@ import yargs from 'yargs';
 
 import { HashOutputPlugin } from '../plugins/hash-output';
 
-interface WebpackerConfig {
+export interface WebpackerConfig {
   outputPath?: string;
   publicPath?: string;
   entries?: { [destPath: string]: string | string[] };
@@ -31,6 +32,7 @@ interface WebpackerConfig {
   hashOutput?: boolean | string;
   watchExclude?: string[];
   devServer?: WebpackDevServer.Configuration;
+  webpackConfig?: webpack.Configuration;
 }
 
 // Configuration
@@ -135,7 +137,7 @@ export const buildConfig = (configs: WebpackerConfig, argv: yargs.Arguments<Webp
   }
 
   // Webpack configs
-  return {
+  let webpackConfig: webpack.Configuration = {
     entry,
     resolve: {
       extensions: ['.js', '.ts'],
@@ -233,6 +235,10 @@ export const buildConfig = (configs: WebpackerConfig, argv: yargs.Arguments<Webp
     },
     devServer: configs.devServer,
   };
+
+  if (configs.webpackConfig) webpackConfig = merge(webpackConfig, configs.webpackConfig);
+
+  return webpackConfig;
 };
 
 export default buildConfig;

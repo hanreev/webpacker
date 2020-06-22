@@ -37,12 +37,8 @@ function handler(mode: 'development' | 'production' = 'production', watch = fals
 
     const compile = (conf: webpack.Configuration | webpack.Configuration[] = {}) => {
       if (!Array.isArray(conf)) conf = [conf];
-      if (withServer) webpackerDevServer(merge(config, conf[0]), args);
-      else
-        conf.forEach(c => {
-          c = merge(config, c);
-          webpackerCompiler(c, args);
-        });
+      if (withServer) webpackerDevServer(merge(config, ...conf), args);
+      else webpackerCompiler(merge(config, ...conf), args);
     };
 
     let webpackConfig: ConfigurationType;
@@ -60,13 +56,13 @@ function handler(mode: 'development' | 'production' = 'production', watch = fals
   };
 }
 
-const serverBuilder = (_yargs: yargs.Argv) => {
-  _yargs.options(require('webpack-dev-server/bin/options'));
-  return _yargs;
+const serverBuilder = (argv: yargs.Argv) => {
+  argv.options(require('webpack-dev-server/bin/options'));
+  return argv;
 };
 
-const initBuilder = (_yargs: yargs.Argv) => {
-  _yargs.options({
+const initBuilder = (argv: yargs.Argv) => {
+  argv.options({
     out: {
       type: 'string',
       alias: 'o',
@@ -74,7 +70,7 @@ const initBuilder = (_yargs: yargs.Argv) => {
       default: path.resolve(process.cwd(), 'webpacker.config.js'),
     },
   });
-  return _yargs;
+  return argv;
 };
 
 const initConfig = (args: yargs.Arguments) => {
@@ -109,7 +105,6 @@ yargs.options({
     type: 'string',
     alias: 'm',
     describe: 'Merge with provided webpack config',
-    default: path.resolve(process.cwd(), 'webpack.config.js'),
   },
   progress: {
     type: 'boolean',

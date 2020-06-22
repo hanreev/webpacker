@@ -1,6 +1,6 @@
 {
   "name": "@hanreev/webpacker",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "author": "Rifa'i M Hanif",
   "description": "Easy way to use webpack",
   "license": "MIT",
@@ -53,7 +53,8 @@
   "files": [
     "bin",
     "lib",
-    "plugins"
+    "plugins",
+    "index.d.ts"
   ],
   "scripts": {
     "format": "prettier --write \"src/**/*\"",

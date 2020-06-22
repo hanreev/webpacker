@@ -5,7 +5,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { Compiler } from 'webpack';
+import { Compiler, Plugin } from 'webpack';
 
 export interface HashOutputData {
   [name: string]: string;
@@ -14,7 +14,7 @@ export interface HashOutputData {
   builtAt?: string;
 }
 
-export class HashOutputPlugin {
+export class HashOutputPlugin implements Plugin {
   outputPath: string;
 
   constructor(outputPath?: string) {
